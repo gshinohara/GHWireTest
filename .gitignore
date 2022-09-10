@@ -1,7 +1,7 @@
-GrasshopperComponentWireTest/obj/
+CompWire/obj/
 *.suo
-GrasshopperComponentWireTest/bin/
-GrasshopperComponentWireTest/.vs/
-GrasshopperComponentWireTest/packages/
+CompWire/bin/
+CompWire/.vs/
+CompWire/packages/
 .vs/
 *.user
