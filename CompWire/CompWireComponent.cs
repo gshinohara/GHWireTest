@@ -1,8 +1,13 @@
-using Grasshopper;
 using Grasshopper.Kernel;
 using Rhino.Geometry;
 using System;
+using System.Linq;
 using System.Collections.Generic;
+using System.Windows.Forms;
+using Grasshopper;
+using Grasshopper.GUI;
+using Grasshopper.GUI.Canvas;
+using Grasshopper.Kernel.Attributes;
 using Grasshopper.Kernel.Types;
 
 namespace CompWire
@@ -41,7 +46,7 @@ namespace CompWire
         /// </summary>
         protected override void RegisterOutputParams(GH_Component.GH_OutputParamManager pManager)
         {
-            pManager.AddTextParameter("Y1", "Y1", "", GH_ParamAccess.item);
+            pManager.AddTextParameter("Y1", "Y1", "", GH_ParamAccess.list);
             pManager.AddTextParameter("Y2", "Y2", "", GH_ParamAccess.item);
         }
 
@@ -52,10 +57,9 @@ namespace CompWire
         /// to store data in output parameters.</param>
         protected override void SolveInstance(IGH_DataAccess DA)
         {
-            string x1 = default;
-            DA.GetData("X1", ref x1);
-
-            this.Message = x1;
+            var attList = ((CompWireAttributes)this.Attributes).ConnectedAttributes;
+            if (attList != null)
+                DA.SetDataList("Y1", attList.Select((IGH_Attributes att) => ((GH_ComponentAttributes)att).Owner.Name));
         }
 
         /// <summary>
@@ -72,10 +76,11 @@ namespace CompWire
         /// that use the old ID will partially fail during loading.
         /// </summary>
         public override Guid ComponentGuid => new Guid("795BF394-B751-4551-9B97-1B255FC882B2");
+        public override TimeSpan ProcessorTime => TimeSpan.Zero;
         public override void CreateAttributes()
         {
-            this.Attributes = new CompWireAttributes(this);
+            CompWireAttributes att = new CompWireAttributes(this);
+            this.Attributes = att;
         }
-        public override TimeSpan ProcessorTime => TimeSpan.Zero;
     }
 }
